@@ -7,6 +7,7 @@ import tidbit.constants.IntegerConstant;
 import tidbit.constants.Type;
 import tidbit.instruction.Instruction;
 import tidbit.instruction.LoadConstant;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -27,7 +28,7 @@ public class NumberValue extends Value
 	}
 
 	@Override
-	public List<Instruction> addToTopOfStack()
+	public List<Instruction> addToTopOfStack(VariableTable table)
 	{
 		return Arrays.asList(
 			new LoadConstant(getConstant()));
@@ -40,7 +41,7 @@ public class NumberValue extends Value
 	}
 
 	@Override
-	public Type getType()
+	public Type getType(VariableTable table)
 	{
 		return Type.ofInt();
 	}

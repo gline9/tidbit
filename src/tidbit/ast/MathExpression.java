@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import tidbit.constants.Type;
 import tidbit.instruction.Instruction;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -17,28 +18,31 @@ public abstract class MathExpression extends Value
 
 	public MathExpression(Value left, Value right, Instruction combineInstruction)
 	{
-		this.left = assertInteger(left);
-		this.right = assertInteger(right);
+		this.left = left;
+		this.right = right;
 		this.combineInstruction = combineInstruction;
 	}
 
-	protected Value assertInteger(Value value)
+	protected Value assertInteger(Value value, VariableTable table)
 	{
-		if (!value.getType().equals(Type.ofInt()))
+		if (!value.getType(table).equals(Type.ofInt()))
 		{
-			throw new RuntimeException(String.format("Invalid type expecting I got '%s'", value.getType().getName()));
+			throw new RuntimeException(String.format("Invalid type expecting I got '%s'", value.getType(table).getName()));
 		}
 
 		return value;
 	}
 
 	@Override
-	public List<Instruction> addToTopOfStack()
+	public List<Instruction> addToTopOfStack(VariableTable table)
 	{
+		assertInteger(left, table);
+		assertInteger(right, table);
+
 		List<Instruction> instructions = new ArrayList<>();
 
-		instructions.addAll(left.addToTopOfStack());
-		instructions.addAll(right.addToTopOfStack());
+		instructions.addAll(left.addToTopOfStack(table));
+		instructions.addAll(right.addToTopOfStack(table));
 		instructions.add(combineInstruction);
 
 		return instructions;
@@ -51,7 +55,7 @@ public abstract class MathExpression extends Value
 	}
 
 	@Override
-	public Type getType()
+	public Type getType(VariableTable table)
 	{
 		return Type.ofInt();
 	}

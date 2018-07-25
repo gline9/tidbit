@@ -35,6 +35,16 @@ public class VariableTable
 		return variable;
 	}
 
+	public Type getVariablesType(String name)
+	{
+		if (!variableMap.containsKey(name))
+		{
+			throw new RuntimeException(String.format("Trying to access uninitialized variable '%s'", name));
+		}
+
+		return variableMap.get(name).getType();
+	}
+
 	public int size()
 	{
 		return variableMap.size() + offset;

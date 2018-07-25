@@ -2,8 +2,8 @@ package tidbit.ast;
 
 import java.util.ArrayList;
 import java.util.List;
-import tidbit.instruction.IStore;
 import tidbit.instruction.Instruction;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -21,12 +21,12 @@ public class AssignmentStatement extends CodeGeneratingNode
 	}
 
 	@Override
-	public List<Instruction> getInstructions()
+	public List<Instruction> getInstructions(VariableTable table)
 	{
 		List<Instruction> instructions = new ArrayList<>();
 
-		instructions.addAll(value.addToTopOfStack());
-		instructions.add(new IStore(variableName));
+		instructions.addAll(value.addToTopOfStack(table));
+		instructions.add(table.getVariable(variableName, value.getType(table)).getType().getStoreInstruction(variableName));
 
 		return instructions;
 	}
