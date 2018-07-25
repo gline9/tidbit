@@ -1,0 +1,6 @@
+x = 2;
+square = x * x + 1;
+quad = square * square;
+print(x);
+print(square);
+print(quad);

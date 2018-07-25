@@ -1,0 +1,270 @@
+PARSER_BEGIN(TidBit)
+package tidbit.ast;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.List;
+import java.util.ArrayList;
+
+
+public class TidBit
+{
+	public static Root parse(InputStream input) throws ParseException, IOException
+	{
+		return new TidBit(input).Program();
+	}
+}
+
+PARSER_END(TidBit)
+
+SKIP :
+{
+    " " |
+    "\t" |
+    "\n" |
+    "\r" 
+}
+
+SPECIAL_TOKEN :
+{
+    <SINGLE_LINE_COMMENT: "//" (~["\n", "\r"])* ("\n" | "\r" | "\r\n")?>
+}
+
+TOKEN :
+{
+    < PRINT: "print" > |
+    < STRING_LITERAL:
+        "\""
+        (   (~["\"","\\","\n","\r"])
+            | ("\\"
+                ( ["n","t","b","r","f","u","\\","'","\""]
+                | ["0"-"7"] ( ["0"-"7"] )?
+                | ["0"-"3"] ["0"-"7"] ["0"-"7"]
+                )
+            )
+        )*
+        "\""
+    > |
+  < INTEGER_LITERAL: ("-")? ["1"-"9"] (["0"-"9"])* >
+}
+
+TOKEN :
+{
+    < LPAREN: "(" > |
+    < RPAREN: ")" > |
+    < SEMICOLON: ";" > |
+    < ASTERISKS: "*" > |
+    < PLUS: "+" > |
+	< PERCENT: "%" > |
+	< EQUALS: "=" > |
+	< VARIABLE_NAME: (["a"-"z","A"-"Z","0"-"9"])+ >
+}
+
+Root Program() :
+{
+	List<CodeGeneratingNode> nodes = new ArrayList<CodeGeneratingNode>();
+	CodeGeneratingNode node = null;
+}
+{
+    ( node = Statement()
+	{
+		nodes.add(node);
+	})*
+	{
+		return new Root(nodes);
+	}
+}
+
+CodeGeneratingNode Statement() :
+{
+	CodeGeneratingNode ret = null;
+}
+{
+    ret = Expression() ";"
+	{
+		return ret;
+	}
+}
+
+CodeGeneratingNode Expression() :
+{
+	CodeGeneratingNode ret = null;
+}
+{
+    (
+		ret = PrintExpr() |
+		ret = AssignmentStatement()
+	)
+	{
+		return ret;
+	}
+}
+
+PrintStatement PrintExpr() :
+{
+    Value value = null;
+}
+{
+    <PRINT> <LPAREN> value = Value() <RPAREN>
+    {
+		return new PrintStatement(value);
+    }
+}
+
+AssignmentStatement AssignmentStatement() :
+{
+	Token name = null;
+	Value value = null;
+}
+{
+	name = <VARIABLE_NAME> <EQUALS> value = Value()
+	{
+		return new AssignmentStatement(name.image, value);
+	}
+}
+
+Value Value() :
+{
+    Value ret = null;
+}
+{
+    (
+		ret = StringValue() |
+		ret = AddExpression()
+	)
+	{
+		return ret;
+	}
+}
+
+StringValue StringValue() :
+{
+    Token value = null;
+}
+{
+    value = <STRING_LITERAL>
+    {
+        String image = value.image;
+		return new StringValue(image.substring(1, image.length() - 1));
+    }
+}
+
+Value AddExpression() :
+{
+	Value left = null;
+	Value rightAcc = null;
+	Value right = null;
+}
+{
+	left = MultExpression() (
+		<PLUS> right = MultExpression()
+		{
+			if (null == rightAcc)
+			{
+				rightAcc = right;
+			}
+			else
+			{
+				rightAcc = new AddExpression(rightAcc, right);
+			}
+		}
+	)*
+	{
+		if (null == rightAcc)
+		{
+			return left;
+		}
+
+		return new AddExpression(left, rightAcc);
+	}
+}
+
+Value MultExpression() :
+{
+	Value left = null;
+	Value rightAcc = null;
+	Value right = null;
+}
+{
+	left = ModExpression() (
+		<ASTERISKS> right = ModExpression()
+		{
+			if (null == rightAcc)
+			{
+				rightAcc = right;
+			}
+			else
+			{
+				rightAcc = new MultExpression(rightAcc, right);
+			}
+		}
+	)*
+	{
+		if (null == rightAcc)
+		{
+			return left;
+		}
+
+		return new MultExpression(left, rightAcc);
+	}
+}
+
+Value ModExpression() :
+{
+	Value left = null;
+	Value rightAcc = null;
+	Value right = null;
+}
+{
+	left = GroupExpression() (
+		<PERCENT> right = GroupExpression()
+		{
+			if (null == rightAcc)
+			{
+				rightAcc = right;
+			}
+			else
+			{
+				rightAcc = new ModExpression(rightAcc, right);
+			}
+		}
+	)*
+	{
+		if (null == rightAcc)
+		{
+			return left;
+		}
+
+		return new ModExpression(left, rightAcc);
+	}
+}
+
+Value GroupExpression() :
+{
+	Value value = null;
+}
+{
+	<LPAREN> value = Value() <RPAREN>
+	{
+		return value;
+	} |
+	value = NumberValue()
+	{
+		return value;
+	}
+}
+
+Value NumberValue() :
+{
+	Token value = null;
+}
+{
+	value = <INTEGER_LITERAL>
+	{
+		return new NumberValue(value.image);
+	} |
+	value = <VARIABLE_NAME>
+	{
+		return new VariableValue(value.image);
+	}
+}
