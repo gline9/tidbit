@@ -10,6 +10,7 @@ import tidbit.instruction.Instruction;
 import tidbit.instruction.VoidReturn;
 import tidbit.methods.MethodAccessor;
 import tidbit.methods.MethodBuilder;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -26,7 +27,8 @@ public class Root
 
 	public byte[] getClassBytes(String className)
 	{
-		List<Instruction> instructions = nodes.stream().map(CodeGeneratingNode::getInstructions).flatMap(List::stream).collect(Collectors.toList());
+		VariableTable table = new VariableTable(0);
+		List<Instruction> instructions = nodes.stream().map(node -> node.getInstructions(table)).flatMap(List::stream).collect(Collectors.toList());
 		instructions.add(new VoidReturn());
 		int maxStackDepth = nodes.stream().map(CodeGeneratingNode::getMaxStackDepth).max(Integer::compare).orElse(0);
 		try

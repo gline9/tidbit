@@ -1,9 +1,10 @@
-package tidbit.instruction;
+package tidbit.instruction.store;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import tidbit.constants.ConstantTable;
 import tidbit.constants.Type;
+import tidbit.instruction.Instruction;
 import tidbit.variables.Variable;
 import tidbit.variables.VariableTable;
 
@@ -11,16 +12,18 @@ import tidbit.variables.VariableTable;
  *
  * @author Gavin
  */
-public class ILoad extends Instruction
+public class StoreInstruction extends Instruction
 {
 	private final String variableName;
+	private final Type type;
 	private Variable variable;
 
-	public ILoad(String variableName)
+	public StoreInstruction(int instructionCode, String variableName, Type type)
 	{
-		super(0x15);
+		super(instructionCode);
 
 		this.variableName = variableName;
+		this.type = type;
 	}
 
 	@Override
@@ -38,7 +41,7 @@ public class ILoad extends Instruction
 	@Override
 	public void registerVariables(VariableTable table)
 	{
-		this.variable = table.getVariable(variableName, Type.ofInt());
+		variable = table.getVariable(variableName, type);
 	}
 
 	@Override

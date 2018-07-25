@@ -3,6 +3,19 @@ package tidbit.constants;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.Function;
+import tidbit.instruction.load.ALoad;
+import tidbit.instruction.load.DLoad;
+import tidbit.instruction.load.FLoad;
+import tidbit.instruction.load.ILoad;
+import tidbit.instruction.load.LLoad;
+import tidbit.instruction.load.LoadInstruction;
+import tidbit.instruction.store.AStore;
+import tidbit.instruction.store.DStore;
+import tidbit.instruction.store.FStore;
+import tidbit.instruction.store.IStore;
+import tidbit.instruction.store.LStore;
+import tidbit.instruction.store.StoreInstruction;
 
 /**
  *
@@ -18,10 +31,37 @@ public class Type
 		classMap.put(double.class, "D");
 		classMap.put(float.class, "F");
 		classMap.put(int.class, "I");
-		classMap.put(long.class, "L");
+		classMap.put(long.class, "J");
 		classMap.put(short.class, "S");
 		classMap.put(boolean.class, "Z");
 	}
+
+	private static final Map<String, Function<String, LoadInstruction>> loadMap = new HashMap<>();
+	static
+	{
+		loadMap.put("B", ILoad::new);
+		loadMap.put("C", ILoad::new);
+		loadMap.put("D", DLoad::new);
+		loadMap.put("F", FLoad::new);
+		loadMap.put("I", ILoad::new);
+		loadMap.put("J", LLoad::new);
+		loadMap.put("S", ILoad::new);
+		loadMap.put("Z", ILoad::new);
+	}
+
+	private static final Map<String, Function<String, StoreInstruction>> storeMap = new HashMap<>();
+	static
+	{
+		storeMap.put("B", IStore::new);
+		storeMap.put("C", IStore::new);
+		storeMap.put("D", DStore::new);
+		storeMap.put("F", FStore::new);
+		storeMap.put("I", IStore::new);
+		storeMap.put("J", LStore::new);
+		storeMap.put("S", IStore::new);
+		storeMap.put("Z", IStore::new);
+	}
+
 	private final String name;
 
 	private Type(String name)
@@ -112,6 +152,26 @@ public class Type
 	public Type asArray()
 	{
 		return new Type("[" + name);
+	}
+
+	public LoadInstruction getLoadInstruction(String variableName)
+	{
+		if (loadMap.containsKey(name))
+		{
+			return loadMap.get(name).apply(variableName);
+		}
+
+		return new ALoad(variableName, this);
+	}
+
+	public StoreInstruction getStoreInstruction(String variableName)
+	{
+		if (storeMap.containsKey(name))
+		{
+			return storeMap.get(name).apply(variableName);
+		}
+
+		return new AStore(variableName, this);
 	}
 
 	@Override

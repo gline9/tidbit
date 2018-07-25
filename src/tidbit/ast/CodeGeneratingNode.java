@@ -2,6 +2,7 @@ package tidbit.ast;
 
 import java.util.List;
 import tidbit.instruction.Instruction;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -10,7 +11,7 @@ import tidbit.instruction.Instruction;
 public abstract class CodeGeneratingNode
 {
 
-	public abstract List<Instruction> getInstructions();
+	public abstract List<Instruction> getInstructions(VariableTable table);
 
 	public abstract int getMaxStackDepth();
 	

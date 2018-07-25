@@ -10,6 +10,7 @@ import tidbit.constants.Type;
 import tidbit.instruction.GetStatic;
 import tidbit.instruction.Instruction;
 import tidbit.instruction.InvokeVirtual;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -25,12 +26,12 @@ public class PrintStatement extends CodeGeneratingNode
 	}
 
 	@Override
-	public List<Instruction> getInstructions()
+	public List<Instruction> getInstructions(VariableTable table)
 	{
 		List<Instruction> instructions = new ArrayList<>();
 		instructions.add(new GetStatic(new FieldReferenceConstant("java/lang/System", "out", Type.ofClass(PrintStream.class))));
-		instructions.addAll(value.addToTopOfStack());
-		instructions.add(new InvokeVirtual(new MethodReferenceConstant("java/io/PrintStream", "println", new Descriptor.Builder().addArg(value.getType()).withReturnType(Type.ofVoid()).build())));
+		instructions.addAll(value.addToTopOfStack(table));
+		instructions.add(new InvokeVirtual(new MethodReferenceConstant("java/io/PrintStream", "println", new Descriptor.Builder().addArg(value.getType(table)).withReturnType(Type.ofVoid()).build())));
 
 		return instructions;
 	}

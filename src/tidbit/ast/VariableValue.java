@@ -3,8 +3,8 @@ package tidbit.ast;
 import java.util.Arrays;
 import java.util.List;
 import tidbit.constants.Type;
-import tidbit.instruction.ILoad;
 import tidbit.instruction.Instruction;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -20,9 +20,9 @@ public class VariableValue extends Value
 	}
 
 	@Override
-	public List<Instruction> addToTopOfStack()
+	public List<Instruction> addToTopOfStack(VariableTable table)
 	{
-		return Arrays.asList(new ILoad(variableName));
+		return Arrays.asList(table.getVariablesType(variableName).getLoadInstruction(variableName));
 	}
 
 	@Override
@@ -32,9 +32,9 @@ public class VariableValue extends Value
 	}
 
 	@Override
-	public Type getType()
+	public Type getType(VariableTable table)
 	{
-		return Type.ofInt();
+		return table.getVariablesType(variableName);
 	}
 	
 }
