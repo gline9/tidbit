@@ -32,7 +32,6 @@ SPECIAL_TOKEN :
 
 TOKEN :
 {
-    < PRINT: "print" > |
     < STRING_LITERAL:
         "\""
         (   (~["\"","\\","\n","\r"])
@@ -45,7 +44,10 @@ TOKEN :
         )*
         "\""
     > |
-  < INTEGER_LITERAL: ("-")? ["1"-"9"] (["0"-"9"])* >
+	< INTEGER_LITERAL: ("-")? ["1"-"9"] (["0"-"9"])* > |
+	< PRINT: "print" > |
+	< TRUE: "true" > |
+	< FALSE: "false" >
 }
 
 TOKEN :
@@ -130,10 +132,24 @@ Value Value() :
 {
     (
 		ret = StringValue() |
-		ret = AddExpression()
+		ret = AddExpression() |
+		ret = BooleanValue()
 	)
 	{
 		return ret;
+	}
+}
+
+BooleanValue BooleanValue() :
+{}
+{
+	<TRUE>
+	{
+		return new BooleanValue(true);
+	} |
+	<FALSE>
+	{
+		return new BooleanValue(false);
 	}
 }
 
