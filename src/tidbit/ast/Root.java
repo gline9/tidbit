@@ -3,14 +3,10 @@ package tidbit.ast;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.Collectors;
 import tidbit.Program;
 import tidbit.attributes.CodeAttribute;
-import tidbit.instruction.Instruction;
-import tidbit.instruction.VoidReturn;
 import tidbit.methods.MethodAccessor;
 import tidbit.methods.MethodBuilder;
-import tidbit.variables.VariableTable;
 
 /**
  *
@@ -27,10 +23,6 @@ public class Root
 
 	public byte[] getClassBytes(String className)
 	{
-		VariableTable table = new VariableTable(0);
-		List<Instruction> instructions = nodes.stream().map(node -> node.getInstructions(table)).flatMap(List::stream).collect(Collectors.toList());
-		instructions.add(new VoidReturn());
-		int maxStackDepth = nodes.stream().map(CodeGeneratingNode::getMaxStackDepth).max(Integer::compare).orElse(0);
 		try
 		{
 			return new Program(className, "java/lang/Object",
@@ -39,7 +31,7 @@ public class Root
 							.withAccess(MethodAccessor.PUBLIC).withAccess(MethodAccessor.STATIC).withAccess(MethodAccessor.SYNTHETIC)
 							.withInputArguments("[Ljava/lang/String;")
 							.withOutputArgument("V")
-							.withAttribute(new CodeAttribute(instructions, maxStackDepth, 1))
+							.withAttribute(new CodeAttribute(nodes, 1))
 							.build()
 				)
 			).getBytes();

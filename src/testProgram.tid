@@ -1,2 +1,18 @@
-print("Hello World");
-print(true);
+
+x = 5;
+y = 2 * x;
+print(x);
+print(y);
+{
+	scoped = 10;
+	double_scoped = 20 * scoped;
+	print(scoped);
+	print(double_scoped);
+}
+
+print(x);
+print(y);
+{
+	test = "hello world";
+	print(test);
+}

@@ -4,9 +4,12 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
+import tidbit.ast.CodeGeneratingNode;
+import tidbit.ast.Scope;
 import tidbit.constants.ConstantTable;
 import tidbit.constants.UTF8Constant;
 import tidbit.instruction.Instruction;
+import tidbit.instruction.VoidReturn;
 import tidbit.variables.VariableTable;
 
 /**
@@ -20,13 +23,14 @@ public class CodeAttribute extends Attribute
 	private final int stackSize;
 	private final VariableTable variables;
 
-	public CodeAttribute(List<Instruction> instructions, int stackSize, int inputArguments)
+	public CodeAttribute(List<CodeGeneratingNode> nodes, int inputArguments)
 	{
-		this.instructions = instructions;
-		this.stackSize = stackSize;
 		this.variables = new VariableTable(inputArguments);
 
-		this.instructions.forEach(i -> i.registerVariables(variables));
+		Scope scope = new Scope(nodes);
+		this.instructions = scope.getInstructions(variables);
+		this.instructions.add(new VoidReturn());
+		this.stackSize = scope.getMaxStackDepth();
 	}
 
 	@Override

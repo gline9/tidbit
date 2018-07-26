@@ -3,6 +3,7 @@ package tidbit.constants;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.function.Function;
 import tidbit.instruction.load.ALoad;
 import tidbit.instruction.load.DLoad;
@@ -16,6 +17,7 @@ import tidbit.instruction.store.FStore;
 import tidbit.instruction.store.IStore;
 import tidbit.instruction.store.LStore;
 import tidbit.instruction.store.StoreInstruction;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -36,7 +38,7 @@ public class Type
 		classMap.put(boolean.class, "Z");
 	}
 
-	private static final Map<String, Function<String, LoadInstruction>> loadMap = new HashMap<>();
+	private static final Map<String, BiFunction<String, VariableTable, LoadInstruction>> loadMap = new HashMap<>();
 	static
 	{
 		loadMap.put("B", ILoad::new);
@@ -49,7 +51,7 @@ public class Type
 		loadMap.put("Z", ILoad::new);
 	}
 
-	private static final Map<String, Function<String, StoreInstruction>> storeMap = new HashMap<>();
+	private static final Map<String, BiFunction<String, VariableTable, StoreInstruction>> storeMap = new HashMap<>();
 	static
 	{
 		storeMap.put("B", IStore::new);
@@ -154,24 +156,24 @@ public class Type
 		return new Type("[" + name);
 	}
 
-	public LoadInstruction getLoadInstruction(String variableName)
+	public LoadInstruction getLoadInstruction(String variableName, VariableTable table)
 	{
 		if (loadMap.containsKey(name))
 		{
-			return loadMap.get(name).apply(variableName);
+			return loadMap.get(name).apply(variableName, table);
 		}
 
-		return new ALoad(variableName, this);
+		return new ALoad(variableName, this, table);
 	}
 
-	public StoreInstruction getStoreInstruction(String variableName)
+	public StoreInstruction getStoreInstruction(String variableName, VariableTable table)
 	{
 		if (storeMap.containsKey(name))
 		{
-			return storeMap.get(name).apply(variableName);
+			return storeMap.get(name).apply(variableName, table);
 		}
 
-		return new AStore(variableName, this);
+		return new AStore(variableName, this, table);
 	}
 
 	@Override

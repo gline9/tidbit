@@ -3,10 +3,8 @@ package tidbit.instruction.store;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import tidbit.constants.ConstantTable;
-import tidbit.constants.Type;
 import tidbit.instruction.Instruction;
 import tidbit.variables.Variable;
-import tidbit.variables.VariableTable;
 
 /**
  *
@@ -14,16 +12,13 @@ import tidbit.variables.VariableTable;
  */
 public class StoreInstruction extends Instruction
 {
-	private final String variableName;
-	private final Type type;
-	private Variable variable;
+	private final Variable variable;
 
-	public StoreInstruction(int instructionCode, String variableName, Type type)
+	public StoreInstruction(int instructionCode, Variable variable)
 	{
 		super(instructionCode);
 
-		this.variableName = variableName;
-		this.type = type;
+		this.variable = variable;
 	}
 
 	@Override
@@ -36,12 +31,6 @@ public class StoreInstruction extends Instruction
 	public void registerConstants(ConstantTable table)
 	{
 		// do nothing
-	}
-
-	@Override
-	public void registerVariables(VariableTable table)
-	{
-		variable = table.getVariable(variableName, type);
 	}
 
 	@Override

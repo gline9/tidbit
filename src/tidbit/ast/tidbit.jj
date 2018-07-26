@@ -59,10 +59,21 @@ TOKEN :
     < PLUS: "+" > |
 	< PERCENT: "%" > |
 	< EQUALS: "=" > |
-	< VARIABLE_NAME: (["a"-"z","A"-"Z","0"-"9"])+ >
+	< VARIABLE_NAME: (["a"-"z","A"-"Z","0"-"9","_"])+ >
 }
 
 Root Program() :
+{
+	List<CodeGeneratingNode> nodes = null;
+}
+{
+    nodes = StatementList()
+	{
+		return new Root(nodes);
+	}
+}
+
+List<CodeGeneratingNode> StatementList() :
 {
 	List<CodeGeneratingNode> nodes = new ArrayList<CodeGeneratingNode>();
 	CodeGeneratingNode node = null;
@@ -73,7 +84,7 @@ Root Program() :
 		nodes.add(node);
 	})*
 	{
-		return new Root(nodes);
+		return nodes;
 	}
 }
 
@@ -82,7 +93,29 @@ CodeGeneratingNode Statement() :
 	CodeGeneratingNode ret = null;
 }
 {
-    ret = Expression() ";"
+    (ret = SimpleStatement() | ret = ScopeStatement())
+	{
+		return ret;
+	}
+}
+
+CodeGeneratingNode ScopeStatement() :
+{
+	List<CodeGeneratingNode> nodes = null;
+}
+{
+	"{" nodes = StatementList() "}"
+	{
+		return new Scope(nodes);
+	}
+}
+
+CodeGeneratingNode SimpleStatement() :
+{
+	CodeGeneratingNode ret = null;
+}
+{
+	ret = Expression() ";"
 	{
 		return ret;
 	}

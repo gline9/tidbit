@@ -63,6 +63,8 @@ public interface TidBitConstants {
     "\"%\"",
     "\"=\"",
     "<VARIABLE_NAME>",
+    "\"{\"",
+    "\"}\"",
   };
 
 }

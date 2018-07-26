@@ -4,7 +4,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import tidbit.constants.ConstantTable;
 import tidbit.constants.MethodReferenceConstant;
-import tidbit.variables.VariableTable;
 
 /**
  *
@@ -40,9 +39,4 @@ public class InvokeVirtual extends Instruction
 		out.writeShort(methodIndex);
 	}
 
-	@Override
-	public void registerVariables(VariableTable table) {
-		// do nothing
-	}
-	
 }

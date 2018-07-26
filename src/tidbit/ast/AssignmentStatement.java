@@ -26,7 +26,7 @@ public class AssignmentStatement extends CodeGeneratingNode
 		List<Instruction> instructions = new ArrayList<>();
 
 		instructions.addAll(value.addToTopOfStack(table));
-		instructions.add(table.getVariable(variableName, value.getType(table)).getType().getStoreInstruction(variableName));
+		instructions.add(table.getVariable(variableName, value.getType(table)).getType().getStoreInstruction(variableName, table));
 
 		return instructions;
 	}
