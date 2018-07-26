@@ -1,0 +1,10 @@
+message = "Welcome to TidBit programming language";
+
+// print the welcome message
+print(message);
+
+// print a simple math expression
+print(1 + 1);
+
+// print a more complex math expression
+print((15 * 10) % 4 + 2);

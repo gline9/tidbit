@@ -13,27 +13,31 @@ public interface TidBitConstants {
   /** RegularExpression Id. */
   int SINGLE_LINE_COMMENT = 5;
   /** RegularExpression Id. */
-  int PRINT = 6;
+  int STRING_LITERAL = 6;
   /** RegularExpression Id. */
-  int STRING_LITERAL = 7;
+  int INTEGER_LITERAL = 7;
   /** RegularExpression Id. */
-  int INTEGER_LITERAL = 8;
+  int PRINT = 8;
   /** RegularExpression Id. */
-  int LPAREN = 9;
+  int TRUE = 9;
   /** RegularExpression Id. */
-  int RPAREN = 10;
+  int FALSE = 10;
   /** RegularExpression Id. */
-  int SEMICOLON = 11;
+  int LPAREN = 11;
   /** RegularExpression Id. */
-  int ASTERISKS = 12;
+  int RPAREN = 12;
   /** RegularExpression Id. */
-  int PLUS = 13;
+  int SEMICOLON = 13;
   /** RegularExpression Id. */
-  int PERCENT = 14;
+  int ASTERISKS = 14;
   /** RegularExpression Id. */
-  int EQUALS = 15;
+  int PLUS = 15;
   /** RegularExpression Id. */
-  int VARIABLE_NAME = 16;
+  int PERCENT = 16;
+  /** RegularExpression Id. */
+  int EQUALS = 17;
+  /** RegularExpression Id. */
+  int VARIABLE_NAME = 18;
 
   /** Lexical state. */
   int DEFAULT = 0;
@@ -46,9 +50,11 @@ public interface TidBitConstants {
     "\"\\n\"",
     "\"\\r\"",
     "<SINGLE_LINE_COMMENT>",
-    "\"print\"",
     "<STRING_LITERAL>",
     "<INTEGER_LITERAL>",
+    "\"print\"",
+    "\"true\"",
+    "\"false\"",
     "\"(\"",
     "\")\"",
     "\";\"",
