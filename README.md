@@ -10,4 +10,6 @@ print(y + x);
 
 message = "Hello World!";
 print(message);
+
+print(true);
 ~~~~
