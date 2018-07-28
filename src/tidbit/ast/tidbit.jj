@@ -46,6 +46,7 @@ TOKEN :
     > |
 	< INTEGER_LITERAL: ("-")? ["1"-"9"] (["0"-"9"])* > |
 	< PRINT: "print" > |
+	< IF: "if" > |
 	< TRUE: "true" > |
 	< FALSE: "false" >
 }
@@ -99,7 +100,7 @@ CodeGeneratingNode Statement() :
 	}
 }
 
-CodeGeneratingNode ScopeStatement() :
+Scope ScopeStatement() :
 {
 	List<CodeGeneratingNode> nodes = null;
 }
@@ -115,9 +116,22 @@ CodeGeneratingNode SimpleStatement() :
 	CodeGeneratingNode ret = null;
 }
 {
-	ret = Expression() ";"
+	(ret = Expression() ";" |
+	ret = IfStatement())
 	{
 		return ret;
+	}
+}
+
+CodeGeneratingNode IfStatement() :
+{
+	Scope scope = null;
+	Value value = null;
+}
+{
+	<IF> <LPAREN> value = Value() <RPAREN> scope = ScopeStatement()
+	{
+		return new IfStatement(value, scope);
 	}
 }
 

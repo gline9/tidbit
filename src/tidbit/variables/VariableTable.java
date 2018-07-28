@@ -41,7 +41,7 @@ public class VariableTable
 
 		if (!variable.getType().equals(type))
 		{
-			throw new RuntimeException(String.format("Tried to assign type '%s' to variable '%s' of type '%s'", type.getName(), name, type.getName()));
+			throw new RuntimeException(String.format("Tried to assign type '%s' to variable '%s' of type '%s'", variable.getType().getName(), name, type.getName()));
 		}
 
 		return variable;

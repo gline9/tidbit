@@ -13,5 +13,7 @@ public abstract class Attribute
 	public abstract void registerConstants(ConstantTable table);
 
 	public abstract void write(DataOutputStream out) throws IOException;
+
+	public abstract int size();
 	
 }

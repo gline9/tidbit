@@ -27,8 +27,9 @@ public class TidBit implements TidBitConstants {
     while (true) {
       switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
       case PRINT:
+      case IF:
       case VARIABLE_NAME:
-      case 19:
+      case 20:
         ;
         break;
       default:
@@ -46,10 +47,11 @@ public class TidBit implements TidBitConstants {
         CodeGeneratingNode ret = null;
     switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
     case PRINT:
+    case IF:
     case VARIABLE_NAME:
       ret = SimpleStatement();
       break;
-    case 19:
+    case 20:
       ret = ScopeStatement();
       break;
     default:
@@ -61,20 +63,44 @@ public class TidBit implements TidBitConstants {
     throw new Error("Missing return statement in function");
   }
 
-  static final public CodeGeneratingNode ScopeStatement() throws ParseException {
+  static final public Scope ScopeStatement() throws ParseException {
         List<CodeGeneratingNode> nodes = null;
-    jj_consume_token(19);
-    nodes = StatementList();
     jj_consume_token(20);
+    nodes = StatementList();
+    jj_consume_token(21);
                 {if (true) return new Scope(nodes);}
     throw new Error("Missing return statement in function");
   }
 
   static final public CodeGeneratingNode SimpleStatement() throws ParseException {
         CodeGeneratingNode ret = null;
-    ret = Expression();
-    jj_consume_token(SEMICOLON);
+    switch ((jj_ntk==-1)?jj_ntk():jj_ntk) {
+    case PRINT:
+    case VARIABLE_NAME:
+      ret = Expression();
+      jj_consume_token(SEMICOLON);
+      break;
+    case IF:
+      ret = IfStatement();
+      break;
+    default:
+      jj_la1[2] = jj_gen;
+      jj_consume_token(-1);
+      throw new ParseException();
+    }
                 {if (true) return ret;}
+    throw new Error("Missing return statement in function");
+  }
+
+  static final public CodeGeneratingNode IfStatement() throws ParseException {
+        Scope scope = null;
+        Value value = null;
+    jj_consume_token(IF);
+    jj_consume_token(LPAREN);
+    value = Value();
+    jj_consume_token(RPAREN);
+    scope = ScopeStatement();
+                {if (true) return new IfStatement(value, scope);}
     throw new Error("Missing return statement in function");
   }
 
@@ -88,7 +114,7 @@ public class TidBit implements TidBitConstants {
       ret = AssignmentStatement();
       break;
     default:
-      jj_la1[2] = jj_gen;
+      jj_la1[3] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -132,7 +158,7 @@ public class TidBit implements TidBitConstants {
       ret = BooleanValue();
       break;
     default:
-      jj_la1[3] = jj_gen;
+      jj_la1[4] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -151,7 +177,7 @@ public class TidBit implements TidBitConstants {
                 {if (true) return new BooleanValue(false);}
       break;
     default:
-      jj_la1[4] = jj_gen;
+      jj_la1[5] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -178,7 +204,7 @@ public class TidBit implements TidBitConstants {
         ;
         break;
       default:
-        jj_la1[5] = jj_gen;
+        jj_la1[6] = jj_gen;
         break label_2;
       }
       jj_consume_token(PLUS);
@@ -213,7 +239,7 @@ public class TidBit implements TidBitConstants {
         ;
         break;
       default:
-        jj_la1[6] = jj_gen;
+        jj_la1[7] = jj_gen;
         break label_3;
       }
       jj_consume_token(ASTERISKS);
@@ -248,7 +274,7 @@ public class TidBit implements TidBitConstants {
         ;
         break;
       default:
-        jj_la1[7] = jj_gen;
+        jj_la1[8] = jj_gen;
         break label_4;
       }
       jj_consume_token(PERCENT);
@@ -286,7 +312,7 @@ public class TidBit implements TidBitConstants {
                 {if (true) return value;}
       break;
     default:
-      jj_la1[8] = jj_gen;
+      jj_la1[9] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -305,7 +331,7 @@ public class TidBit implements TidBitConstants {
                 {if (true) return new VariableValue(value.image);}
       break;
     default:
-      jj_la1[9] = jj_gen;
+      jj_la1[10] = jj_gen;
       jj_consume_token(-1);
       throw new ParseException();
     }
@@ -322,13 +348,13 @@ public class TidBit implements TidBitConstants {
   static public Token jj_nt;
   static private int jj_ntk;
   static private int jj_gen;
-  static final private int[] jj_la1 = new int[10];
+  static final private int[] jj_la1 = new int[11];
   static private int[] jj_la1_0;
   static {
       jj_la1_init_0();
    }
    private static void jj_la1_init_0() {
-      jj_la1_0 = new int[] {0xc0100,0xc0100,0x40100,0x40ec0,0x600,0x8000,0x4000,0x10000,0x40880,0x40080,};
+      jj_la1_0 = new int[] {0x180300,0x180300,0x80300,0x80100,0x81cc0,0xc00,0x10000,0x8000,0x20000,0x81080,0x80080,};
    }
 
   /** Constructor with InputStream. */
@@ -349,7 +375,7 @@ public class TidBit implements TidBitConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -363,7 +389,7 @@ public class TidBit implements TidBitConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Constructor. */
@@ -380,7 +406,7 @@ public class TidBit implements TidBitConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -390,7 +416,7 @@ public class TidBit implements TidBitConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Constructor with generated Token Manager. */
@@ -406,7 +432,7 @@ public class TidBit implements TidBitConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   /** Reinitialise. */
@@ -415,7 +441,7 @@ public class TidBit implements TidBitConstants {
     token = new Token();
     jj_ntk = -1;
     jj_gen = 0;
-    for (int i = 0; i < 10; i++) jj_la1[i] = -1;
+    for (int i = 0; i < 11; i++) jj_la1[i] = -1;
   }
 
   static private Token jj_consume_token(int kind) throws ParseException {
@@ -466,12 +492,12 @@ public class TidBit implements TidBitConstants {
   /** Generate ParseException. */
   static public ParseException generateParseException() {
     jj_expentries.clear();
-    boolean[] la1tokens = new boolean[21];
+    boolean[] la1tokens = new boolean[22];
     if (jj_kind >= 0) {
       la1tokens[jj_kind] = true;
       jj_kind = -1;
     }
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < 11; i++) {
       if (jj_la1[i] == jj_gen) {
         for (int j = 0; j < 32; j++) {
           if ((jj_la1_0[i] & (1<<j)) != 0) {
@@ -480,7 +506,7 @@ public class TidBit implements TidBitConstants {
         }
       }
     }
-    for (int i = 0; i < 21; i++) {
+    for (int i = 0; i < 22; i++) {
       if (la1tokens[i]) {
         jj_expentry = new int[1];
         jj_expentry[0] = i;

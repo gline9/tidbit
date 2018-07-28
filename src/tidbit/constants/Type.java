@@ -4,19 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.BiFunction;
-import java.util.function.Function;
 import tidbit.instruction.load.ALoad;
 import tidbit.instruction.load.DLoad;
 import tidbit.instruction.load.FLoad;
 import tidbit.instruction.load.ILoad;
 import tidbit.instruction.load.LLoad;
 import tidbit.instruction.load.LoadInstruction;
+import tidbit.instruction.load.ZLoad;
 import tidbit.instruction.store.AStore;
 import tidbit.instruction.store.DStore;
 import tidbit.instruction.store.FStore;
 import tidbit.instruction.store.IStore;
 import tidbit.instruction.store.LStore;
 import tidbit.instruction.store.StoreInstruction;
+import tidbit.instruction.store.ZStore;
 import tidbit.variables.VariableTable;
 
 /**
@@ -48,7 +49,7 @@ public class Type
 		loadMap.put("I", ILoad::new);
 		loadMap.put("J", LLoad::new);
 		loadMap.put("S", ILoad::new);
-		loadMap.put("Z", ILoad::new);
+		loadMap.put("Z", ZLoad::new);
 	}
 
 	private static final Map<String, BiFunction<String, VariableTable, StoreInstruction>> storeMap = new HashMap<>();
@@ -61,7 +62,7 @@ public class Type
 		storeMap.put("I", IStore::new);
 		storeMap.put("J", LStore::new);
 		storeMap.put("S", IStore::new);
-		storeMap.put("Z", IStore::new);
+		storeMap.put("Z", ZStore::new);
 	}
 
 	private final String name;

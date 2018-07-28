@@ -1,18 +1,15 @@
+x = false;
 
-x = 5;
-y = 2 * x;
-print(x);
-print(y);
+if (x)
 {
-	scoped = 10;
-	double_scoped = 20 * scoped;
-	print(scoped);
-	print(double_scoped);
+	print("Truth");
+	message = "Hello World";
 }
 
-print(x);
-print(y);
+message = "Hello";
+
+if (true)
 {
-	test = "hello world";
-	print(test);
+	print("Second Truth");
+	print(message);
 }
