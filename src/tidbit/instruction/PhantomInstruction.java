@@ -1,30 +1,31 @@
-package tidbit.instruction.store;
+package tidbit.instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import tidbit.constants.ConstantTable;
-import tidbit.instruction.Instruction;
-import tidbit.variables.Variable;
 
 /**
  *
  * @author Gavin
  */
-public class StoreInstruction extends Instruction
+public abstract class PhantomInstruction extends Instruction
 {
-	private final Variable variable;
 
-	public StoreInstruction(int instructionCode, Variable variable)
+	public PhantomInstruction()
 	{
-		super(instructionCode);
+		super(0);
+	}
 
-		this.variable = variable;
+	@Override
+	public int size()
+	{
+		return 0;
 	}
 
 	@Override
 	protected int additionalSize()
 	{
-		return 1;
+		return 0;
 	}
 
 	@Override
@@ -34,9 +35,15 @@ public class StoreInstruction extends Instruction
 	}
 
 	@Override
+	public void write(DataOutputStream out) throws IOException
+	{
+		// do nothing
+	}
+
+	@Override
 	protected void writeInstruction(DataOutputStream out) throws IOException
 	{
-		out.writeByte(variable.getIndex());
+		// do nothing
 	}
 	
 }

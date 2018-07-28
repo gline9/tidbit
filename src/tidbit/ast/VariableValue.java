@@ -22,7 +22,7 @@ public class VariableValue extends Value
 	@Override
 	public List<Instruction> addToTopOfStack(VariableTable table)
 	{
-		return Arrays.asList(table.getVariablesType(variableName).getLoadInstruction(variableName));
+		return Arrays.asList(table.getVariablesType(variableName).getLoadInstruction(variableName, table));
 	}
 
 	@Override

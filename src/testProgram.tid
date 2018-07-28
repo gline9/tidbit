@@ -1,2 +1,15 @@
-print("Hello World");
-print(true);
+x = false;
+
+if (x)
+{
+	print("Truth");
+	message = "Hello World";
+}
+
+message = "Hello";
+
+if (true)
+{
+	print("Second Truth");
+	print(message);
+}

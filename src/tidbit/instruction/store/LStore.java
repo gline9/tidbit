@@ -1,6 +1,7 @@
 package tidbit.instruction.store;
 
 import tidbit.constants.Type;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -9,9 +10,9 @@ import tidbit.constants.Type;
 public class LStore extends StoreInstruction
 {
 
-	public LStore(String variableName)
+	public LStore(String variableName, VariableTable table)
 	{
-		super(0x37, variableName, Type.ofLong());
+		super(0x37, table.getVariable(variableName, Type.ofLong()));
 	}
 	
 }

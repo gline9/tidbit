@@ -4,7 +4,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import tidbit.constants.Constant;
 import tidbit.constants.ConstantTable;
-import tidbit.variables.VariableTable;
 
 /**
  *
@@ -40,10 +39,4 @@ public class LoadConstant extends Instruction
 		out.writeByte(constantIndex);
 	}
 
-	@Override
-	public void registerVariables(VariableTable table)
-	{
-		// do nothing
-	}
-	
 }

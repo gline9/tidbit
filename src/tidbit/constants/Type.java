@@ -3,19 +3,22 @@ package tidbit.constants;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
-import java.util.function.Function;
+import java.util.function.BiFunction;
 import tidbit.instruction.load.ALoad;
 import tidbit.instruction.load.DLoad;
 import tidbit.instruction.load.FLoad;
 import tidbit.instruction.load.ILoad;
 import tidbit.instruction.load.LLoad;
 import tidbit.instruction.load.LoadInstruction;
+import tidbit.instruction.load.ZLoad;
 import tidbit.instruction.store.AStore;
 import tidbit.instruction.store.DStore;
 import tidbit.instruction.store.FStore;
 import tidbit.instruction.store.IStore;
 import tidbit.instruction.store.LStore;
 import tidbit.instruction.store.StoreInstruction;
+import tidbit.instruction.store.ZStore;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -36,7 +39,7 @@ public class Type
 		classMap.put(boolean.class, "Z");
 	}
 
-	private static final Map<String, Function<String, LoadInstruction>> loadMap = new HashMap<>();
+	private static final Map<String, BiFunction<String, VariableTable, LoadInstruction>> loadMap = new HashMap<>();
 	static
 	{
 		loadMap.put("B", ILoad::new);
@@ -46,10 +49,10 @@ public class Type
 		loadMap.put("I", ILoad::new);
 		loadMap.put("J", LLoad::new);
 		loadMap.put("S", ILoad::new);
-		loadMap.put("Z", ILoad::new);
+		loadMap.put("Z", ZLoad::new);
 	}
 
-	private static final Map<String, Function<String, StoreInstruction>> storeMap = new HashMap<>();
+	private static final Map<String, BiFunction<String, VariableTable, StoreInstruction>> storeMap = new HashMap<>();
 	static
 	{
 		storeMap.put("B", IStore::new);
@@ -59,7 +62,7 @@ public class Type
 		storeMap.put("I", IStore::new);
 		storeMap.put("J", LStore::new);
 		storeMap.put("S", IStore::new);
-		storeMap.put("Z", IStore::new);
+		storeMap.put("Z", ZStore::new);
 	}
 
 	private final String name;
@@ -154,24 +157,24 @@ public class Type
 		return new Type("[" + name);
 	}
 
-	public LoadInstruction getLoadInstruction(String variableName)
+	public LoadInstruction getLoadInstruction(String variableName, VariableTable table)
 	{
 		if (loadMap.containsKey(name))
 		{
-			return loadMap.get(name).apply(variableName);
+			return loadMap.get(name).apply(variableName, table);
 		}
 
-		return new ALoad(variableName, this);
+		return new ALoad(variableName, this, table);
 	}
 
-	public StoreInstruction getStoreInstruction(String variableName)
+	public StoreInstruction getStoreInstruction(String variableName, VariableTable table)
 	{
 		if (storeMap.containsKey(name))
 		{
-			return storeMap.get(name).apply(variableName);
+			return storeMap.get(name).apply(variableName, table);
 		}
 
-		return new AStore(variableName, this);
+		return new AStore(variableName, this, table);
 	}
 
 	@Override

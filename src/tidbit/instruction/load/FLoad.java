@@ -1,6 +1,7 @@
 package tidbit.instruction.load;
 
 import tidbit.constants.Type;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -9,9 +10,9 @@ import tidbit.constants.Type;
 public class FLoad extends LoadInstruction
 {
 
-	public FLoad(String variableName)
+	public FLoad(String variableName, VariableTable table)
 	{
-		super(0x17, variableName, Type.ofFloat());
+		super(0x17, table.getVariable(variableName, Type.ofFloat()));
 	}
 
 	

@@ -4,7 +4,6 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 import tidbit.constants.ConstantTable;
 import tidbit.constants.FieldReferenceConstant;
-import tidbit.variables.VariableTable;
 
 /**
  *
@@ -40,9 +39,4 @@ public class GetStatic extends Instruction
 		fieldIndex = table.registerConstant(field);
 	}
 
-	@Override
-	public void registerVariables(VariableTable table) {
-		// do nothing
-	}
-	
 }

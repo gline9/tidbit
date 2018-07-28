@@ -46,6 +46,7 @@ TOKEN :
     > |
 	< INTEGER_LITERAL: ("-")? ["1"-"9"] (["0"-"9"])* > |
 	< PRINT: "print" > |
+	< IF: "if" > |
 	< TRUE: "true" > |
 	< FALSE: "false" >
 }
@@ -59,10 +60,21 @@ TOKEN :
     < PLUS: "+" > |
 	< PERCENT: "%" > |
 	< EQUALS: "=" > |
-	< VARIABLE_NAME: (["a"-"z","A"-"Z","0"-"9"])+ >
+	< VARIABLE_NAME: (["a"-"z","A"-"Z","0"-"9","_"])+ >
 }
 
 Root Program() :
+{
+	List<CodeGeneratingNode> nodes = null;
+}
+{
+    nodes = StatementList()
+	{
+		return new Root(nodes);
+	}
+}
+
+List<CodeGeneratingNode> StatementList() :
 {
 	List<CodeGeneratingNode> nodes = new ArrayList<CodeGeneratingNode>();
 	CodeGeneratingNode node = null;
@@ -73,7 +85,7 @@ Root Program() :
 		nodes.add(node);
 	})*
 	{
-		return new Root(nodes);
+		return nodes;
 	}
 }
 
@@ -82,9 +94,44 @@ CodeGeneratingNode Statement() :
 	CodeGeneratingNode ret = null;
 }
 {
-    ret = Expression() ";"
+    (ret = SimpleStatement() | ret = ScopeStatement())
 	{
 		return ret;
+	}
+}
+
+Scope ScopeStatement() :
+{
+	List<CodeGeneratingNode> nodes = null;
+}
+{
+	"{" nodes = StatementList() "}"
+	{
+		return new Scope(nodes);
+	}
+}
+
+CodeGeneratingNode SimpleStatement() :
+{
+	CodeGeneratingNode ret = null;
+}
+{
+	(ret = Expression() ";" |
+	ret = IfStatement())
+	{
+		return ret;
+	}
+}
+
+CodeGeneratingNode IfStatement() :
+{
+	Scope scope = null;
+	Value value = null;
+}
+{
+	<IF> <LPAREN> value = Value() <RPAREN> scope = ScopeStatement()
+	{
+		return new IfStatement(value, scope);
 	}
 }
 

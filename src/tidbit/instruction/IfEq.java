@@ -1,30 +1,28 @@
-package tidbit.instruction.load;
+package tidbit.instruction;
 
 import java.io.DataOutputStream;
 import java.io.IOException;
 import tidbit.constants.ConstantTable;
-import tidbit.instruction.Instruction;
-import tidbit.variables.Variable;
 
 /**
  *
  * @author Gavin
  */
-public class LoadInstruction extends Instruction
+public class IfEq extends Instruction
 {
-	private final Variable variable;
+	private final JumpPointInstruction jumpPoint;
 
-	public LoadInstruction(int instructionCode, Variable variable)
+	public IfEq(JumpPointInstruction jumpPoint)
 	{
-		super(instructionCode);
+		super(0x99);
 
-		this.variable = variable;
+		this.jumpPoint = jumpPoint;
 	}
 
 	@Override
 	protected int additionalSize()
 	{
-		return 1;
+		return 2;
 	}
 
 	@Override
@@ -36,7 +34,7 @@ public class LoadInstruction extends Instruction
 	@Override
 	protected void writeInstruction(DataOutputStream out) throws IOException
 	{
-		out.writeByte(variable.getIndex());
+		out.writeShort(jumpPoint.getRelativeJump(this));
 	}
-
+	
 }

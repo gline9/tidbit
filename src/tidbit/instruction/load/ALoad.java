@@ -1,6 +1,7 @@
 package tidbit.instruction.load;
 
 import tidbit.constants.Type;
+import tidbit.variables.VariableTable;
 
 /**
  *
@@ -9,9 +10,9 @@ import tidbit.constants.Type;
 public class ALoad extends LoadInstruction
 {
 	
-	public ALoad(String variableName, Type type)
+	public ALoad(String variableName, Type type, VariableTable table)
 	{
-		super(0x19, variableName, type);
+		super(0x19, table.getVariable(variableName, type));
 	}
 	
 }
