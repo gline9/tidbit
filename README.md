@@ -12,4 +12,16 @@ message = "Hello World!";
 print(message);
 
 print(true);
+
+truth = true;
+
+if (truth)
+{
+  print("True is truth");
+}
+
+if (false)
+{
+  print("False is truth");
+}
 ~~~~
